@@ -5,8 +5,8 @@ import "./globals.css";
 import { Noto_Sans_JP } from 'next/font/google'
 
 export const metadata: Metadata = {
-  title: "This is title tag",
-  description: "this is description",
+  title: "(Default title tag)",
+  description: "(Default description tag)",
 };
 
 const notoSansJP = Noto_Sans_JP({
