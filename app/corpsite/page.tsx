@@ -48,6 +48,24 @@ export default function Page() {
       </div>
 
       <div className="container max-w-full bg-white rounded-lg mb-5">
+        <h2 className="p-5 text-2xl font-extrabold">UG WORK 概要</h2>
+        <div className="p-5">
+          <h3 className="text-xl font-extrabold">名称</h3>
+          <p>UG WORK 合同会社</p>
+        </div>
+
+        <div className="p-5">
+          <h3 className="text-xl font-extrabold">代表</h3>
+          <p>澤田 裕二</p>
+        </div>
+        <div className="p-5">
+          <h3 className="text-xl font-extrabold">郵送先</h3>
+          <p>110-0011 東京都千代田区内幸町1-3-1 幸ビルディング901</p>
+        </div>
+
+      </div>
+
+      <div className="container max-w-full bg-white rounded-lg mb-5">
         <h2 className="p-5 text-2xl font-extrabold">プロフィール</h2>
         <div className="p-5">
           <h3 className="text-xl font-extrabold">澤田裕二</h3>
