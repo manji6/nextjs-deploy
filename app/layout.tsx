@@ -1,4 +1,3 @@
-// Metadata は 各ページでMetadata.titleとかに設定すると設定ができる昨日
 import type { Metadata } from "next";
 import "./globals.css";
 // Google Font からNoto Sans JPを読み込み
