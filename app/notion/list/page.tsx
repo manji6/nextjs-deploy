@@ -8,8 +8,8 @@ export default async function NotionList() {
     <>
       {data.map((content: { id: string, title: string, date: string, tags: string[], excerpt: string, slug: string }, index: number) => {
         return (
-          <div className="p-5">
-            <ul key={index}>
+          <div className="p-5" key={index}>
+            <ul >
               <li>{index}</li>
               <li>{content.id}</li>
               <li>{content.title}</li>

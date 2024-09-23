@@ -140,6 +140,7 @@ export async function getAllPageContents(): Promise<NotionPostData[]> {
     };
   }
 
+  // ベースはPageObjectResponseなのでそれを拡張
   type NotionPost = PageObjectResponse & notionPostBase;
 
   const postsProperties = posts.map((post: NotionPost) => {
@@ -154,7 +155,7 @@ export async function getAllPageContents(): Promise<NotionPostData[]> {
 
     // multi_selectプロパティの取り出し（例：types）
     const tags = post.properties.Tags.multi_select.map(
-      (item: any) => item.name
+      (item: NotionMultiSelect) => item.name
     );
 
     // filesプロパティの取り出し（例：file）
