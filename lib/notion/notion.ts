@@ -160,7 +160,7 @@ export async function getAllPageContents(): Promise<NotionPostData[]> {
 
     // filesプロパティの取り出し（例：file）
     const files = post.properties.FeaturedImage.files.map(
-      (file: any) => file.file.url
+      (file: NotionFiles) => file.file.url
     );
 
     // 概要テキスト取り出し
