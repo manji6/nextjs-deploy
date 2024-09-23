@@ -7,10 +7,10 @@ export default async function NotionList() {
   return (
     <>
       {data.map((content: { id: string, title: string, date: string, tags: string[], excerpt: string, slug: string }, index: number) => {
-        console.log(content.id);
         return (
           <div className="p-5">
-            <ul>
+            <ul key={index}>
+              <li>{index}</li>
               <li>{content.id}</li>
               <li>{content.title}</li>
               <li>{content.date}</li>

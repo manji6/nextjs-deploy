@@ -36,8 +36,8 @@ export default async function Page({ params }: { params: { slug: string } }) {
           <div className="pt-3 list-decimal" key={index}>
             <ReactMarkdown
               components={{
-                ol: ({ node, ...props }) => <ol className="list-decimal list-inside pb-2" {...props} />,
-                li: ({ node, ...props }) => <li {...props} />
+                ol: ({ ...props }) => <ol className="list-decimal list-inside pb-2" {...props} />,
+                li: ({ ...props }) => <li {...props} />
               }}
             >
               {formattedMarkdown}
