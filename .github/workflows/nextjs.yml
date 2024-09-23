@@ -14,7 +14,7 @@ on:
 # added github repository secret variable to env
 env:
   PUBLIC_NOTION_API_KEY: ${{secrets.PUBLIC_NOTION_API_KEY}}
-  PUBLIC_NOTION_DB_URL: ${{PUBLIC_NOTION_DB_URL}}
+  PUBLIC_NOTION_DB_URL: ${{secrets.PUBLIC_NOTION_DB_URL}}
 
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
