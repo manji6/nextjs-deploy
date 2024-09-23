@@ -9,7 +9,7 @@ export async function generateStaticParams() {
   const data = await getAllPageContents();
 
   // Propertiesに入れているslugはURLのベースになるので、このリストを生成する
-  const slug_list = data.map((item: any, index: number) => {
+  const slug_list = data.map((item: { id: string, title: string, date: string, tags: string[], excerpt: string, slug: string }) => {
     return {
       slug: item.slug
     }
@@ -30,7 +30,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
   return (
     <>
       <h1>Page: {params.slug}</h1>
-      {pageContents.map((content: any, index: any) => {
+      {pageContents.map((content: { type: string, blockId: string, parent: string, children: [] }, index: number) => {
         const formattedMarkdown = content.parent.replace(/\n/g, '  \n');
         return (
           <div className="pt-3 list-decimal" key={index}>

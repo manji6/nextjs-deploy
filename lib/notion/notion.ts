@@ -1,10 +1,6 @@
 import { Client } from "@notionhq/client";
-import { getPage } from "@notionhq/client/build/src/api-endpoints";
+//import { getPage } from "@notionhq/client/build/src/api-endpoints";
 import { NotionToMarkdown } from "notion-to-md";
-
-interface searchCondition {
-  isPublished: boolean;
-}
 
 export const notion = new Client({
   auth: process.env.PUBLIC_NOTION_API_KEY,
