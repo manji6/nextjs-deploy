@@ -1,9 +1,9 @@
-import { notion, getAllPosts, getPageContent } from '../../lib/notion/notion';
+import { notion, getAllPageContents, getPageContent } from '../../lib/notion/notion';
 import ReactMarkdown from 'react-markdown';
 
 export default async function Notion() {
 
-  const data = await getAllPosts();
+  const data = await getAllPageContents();
 
   console.log(data);
 
