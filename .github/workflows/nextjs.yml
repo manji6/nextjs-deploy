@@ -3,7 +3,6 @@
 # To get started with Next.js see: https://nextjs.org/docs/getting-started
 #
 name: Deploy Next.js site to Pages
-
 on:
   # Runs on pushes targeting the default branch
   push:
@@ -11,6 +10,12 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+
+# added github repository secret variable to env
+env:
+  PUBLIC_NOTION_API_KEY: ${{secrets.PUBLIC_NOTION_API_KEY}}
+  PUBLIC_NOTION_DB_URL: ${{secrets.PUBLIC_NOTION_DB_URL}}
+
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
