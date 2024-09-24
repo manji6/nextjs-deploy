@@ -7,13 +7,7 @@ export const notion = new Client({
 });
 
 import type {
-  BlockObjectResponse,
-  CommentObjectResponse,
-  CreateCommentParameters,
-  DatabaseObjectResponse,
-  ListCommentsResponse,
   PageObjectResponse,
-  RichTextItemResponse,
   TextRichTextItemResponse,
 } from "@notionhq/client/build/src/api-endpoints";
 
