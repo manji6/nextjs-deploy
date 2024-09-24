@@ -1,7 +1,8 @@
-import type { Metadata, ResolvingMetadata } from "next";
+import type { Metadata } from "next";
 
 import { getAllPageContents, getPageContentBySlug } from '../../../../lib/notion/notion';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from "remark-gfm";
 
 // 引数の型定義
 type Props = {
@@ -27,7 +28,7 @@ export async function generateStaticParams() {
   return slug_list;
 }
 
-export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata(): Promise<Metadata> {
 
   // Notion からpostsデータを取り出す
   const data = await getAllPageContents();
@@ -67,10 +68,11 @@ export default async function Page({ params }: { params: { slug: string } }) {
             return (
               <div className="pt-3" key={index}>
                 <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
                   components={{
                     ol: ({ ...props }) => <ol className="list-decimal list-inside pb-2" {...props} />,
-                    li: ({ node, ...props }) => <li className="ml-5 list-disc" {...props} />,
-                    h2: ({ node, ...props }) => <h4 className="text-xl font-bold" {...props} />
+                    li: ({ children }) => (<li className="ml-5 list-disc">{children}</li>),
+                    h2: ({ children }) => (<h4 className="text-xl font-bold">{children}</h4>)
                   }}
                 >
                   {formattedMarkdown}
