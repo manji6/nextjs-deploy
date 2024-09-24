@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import Header from "@components/header";
 import "./globals.css";
+
+
 // Google Font からNoto Sans JPを読み込み
 import { Noto_Sans_JP } from 'next/font/google'
 
@@ -24,7 +27,10 @@ export default function RootLayout({
         <meta charSet="UTF-8"></meta>
       </head>
       <body className={notoSansJP.className}>
-        {children}
+        <div className="p-5 bg-gradient-to-r from-lime-500 to-green-200">
+          <Header />
+          {children}
+        </div>
       </body>
     </html>
   );

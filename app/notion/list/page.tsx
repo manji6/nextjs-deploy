@@ -1,4 +1,5 @@
 import { getAllPageContents } from '../../../lib/notion/notion';
+import Link from 'next/link'
 
 export default async function NotionList() {
 
@@ -17,6 +18,7 @@ export default async function NotionList() {
               <li>{content.tags}</li>
               <li>{content.excerpt}</li>
               <li>{content.slug}</li>
+              <li><Link href={`/notion/post/${content.slug}`}>/notion/post/{content.slug}</Link></li>
             </ul>
           </div>
         )

@@ -6,18 +6,6 @@ export const notion = new Client({
   auth: process.env.PUBLIC_NOTION_API_KEY,
 });
 
-const n2m = new NotionToMarkdown({ notionClient: notion });
-
-interface NotionPostData {
-  id: string;
-  title: string;
-  date: string;
-  tags: string[];
-  files: string[];
-  excerpt: string;
-  slug: string;
-}
-
 import type {
   BlockObjectResponse,
   CommentObjectResponse,
@@ -29,50 +17,72 @@ import type {
   TextRichTextItemResponse,
 } from "@notionhq/client/build/src/api-endpoints";
 
-/* Replace */
-export type NotionDatabaseObjectResponse = DatabaseObjectResponse;
-export type NotionPageObjectResponse = PageObjectResponse;
-export type NotionBlockObjectResponse = BlockObjectResponse;
-export type NotionListCommentsResponse = ListCommentsResponse;
-export type NotionCommentObjectResponse = CommentObjectResponse;
-export type NotionRichTextItemResponse = RichTextItemResponse;
-export type NotionCreateCommentParameters = CreateCommentParameters; // Request only
+import type { MdBlock } from "notion-to-md/build/types";
 
-/* Extract */
-export type NotionDatabaseProperty = NotionDatabaseObjectResponse["properties"];
-export type NotionDatabasePropertyConfigResponse =
-  NotionDatabaseObjectResponse["properties"][string];
-export type NotionSelectPropertyResponse = Extract<
-  NotionDatabasePropertyConfigResponse,
-  { type: "select" }
->["select"]["options"][number];
-export type NotionSelectColor = NotionSelectPropertyResponse["color"];
-export type NotionRichTextItemRequest =
-  CreateCommentParameters["rich_text"][number]; // Request only
-
-/* Custom */
-export type NotionPostMeta = {
+interface NotionPostData {
   id: string;
-  icon: string;
   title: string;
-  description?: string;
-  category: string;
   date: string;
-  updatedAt: string;
-  tags: NotionSelectPropertyResponse[];
-  likes: number;
-};
-export type NotionPost = NotionPostMeta & {
-  children: NotionBlockObjectResponse[];
-};
-export type NotionBlogProperties = {
-  categories: NotionSelectPropertyResponse[];
-  tags: NotionSelectPropertyResponse[];
-};
-export type NotionBlogPropertiesWithCount = {
-  categories: (NotionSelectPropertyResponse & { count: number })[];
-  tags: (NotionSelectPropertyResponse & { count: number })[];
-};
+  tags: string[];
+  image?: string[];
+  rank?: number;
+  excerpt?: string;
+  slug: string;
+  contents?: MdBlock[];
+}
+
+// Notion API(Database)のリクエストレスポンス用
+interface notionPostBase {
+  id: string;
+  created_time: string;
+  last_edited_time: string;
+  parent: {
+    type: string;
+    database_id: string;
+  };
+  archived: boolean;
+  in_trash: boolean;
+  properties: {
+    Page: {
+      title: TextRichTextItemResponse[];
+    };
+    Date: {
+      date: {
+        start: string;
+      };
+    };
+    Tags: {
+      multi_select: NotionMultiSelect[];
+    };
+    FeaturedImage: {
+      files: NotionFiles[];
+    };
+    Excerpt: {
+      rich_text: TextRichTextItemResponse[];
+      plain_text: string;
+    };
+    Slug: {
+      rich_text: TextRichTextItemResponse[];
+      plain_text: string;
+    };
+  };
+}
+
+interface NotionMultiSelect {
+  id: string;
+  name: string;
+  color: string;
+}
+
+interface NotionFiles {
+  name: string;
+  file: {
+    url: string;
+    expiry_time: string;
+  };
+}
+
+const n2m = new NotionToMarkdown({ notionClient: notion });
 
 export async function getAllPageContents(): Promise<NotionPostData[]> {
   const response = await notion.databases.query({
@@ -84,61 +94,8 @@ export async function getAllPageContents(): Promise<NotionPostData[]> {
       },
     },
   });
+
   const posts = response.results;
-
-  //  console.dir(posts, { depth: null });
-
-  // DatabaseObjectResponse
-
-  interface notionPostBase {
-    id: string;
-    created_time: string;
-    last_edited_time: string;
-    parent: {
-      type: string;
-      database_id: string;
-    };
-    archived: boolean;
-    in_trash: boolean;
-    properties: {
-      Page: {
-        title: TextRichTextItemResponse[];
-      };
-      Date: {
-        date: {
-          start: string;
-        };
-      };
-      Tags: {
-        multi_select: NotionMultiSelect[];
-      };
-      FeaturedImage: {
-        files: NotionFiles[];
-      };
-      Excerpt: {
-        rich_text: TextRichTextItemResponse[];
-        plain_text: string;
-      };
-      Slug: {
-        rich_text: TextRichTextItemResponse[];
-        plain_text: string;
-      };
-    };
-  }
-
-  interface NotionMultiSelect {
-    id: string;
-    name: string;
-    color: string;
-  }
-
-  interface NotionFiles {
-    name: string;
-    file: {
-      url: string;
-      expiry_time: string;
-    };
-  }
 
   // ベースはPageObjectResponseなのでそれを拡張
   type NotionPost = PageObjectResponse & notionPostBase;
@@ -158,8 +115,8 @@ export async function getAllPageContents(): Promise<NotionPostData[]> {
       (item: NotionMultiSelect) => item.name
     );
 
-    // filesプロパティの取り出し（例：file）
-    const files = post.properties.FeaturedImage.files.map(
+    // imageプロパティの取り出し（例：file）
+    const image = post.properties.FeaturedImage.files.map(
       (file: NotionFiles) => file.file.url
     );
 
@@ -170,7 +127,7 @@ export async function getAllPageContents(): Promise<NotionPostData[]> {
     const slug = post.properties.Slug.rich_text[0].plain_text;
 
     // プロパティをまとめたオブジェクトを返す
-    return { id, title, date, tags, files, excerpt, slug };
+    return { id, title, date, tags, image, excerpt, slug };
   });
 
   return postsProperties;
@@ -188,10 +145,28 @@ export async function getPageContentBySlug(slug_param: string) {
 
   // 該当のSlug名のコンテンツがあるか判断
   // TODO: あとでエラーハンドリング
-  const pageInfo = (await all_post_data).find(({ slug }) => slug == slug_param);
+  const post_data = (await all_post_data).find(
+    ({ slug }) => slug == slug_param
+  );
 
   // 該当のコンテンツを取り出す
-  const page_data = await getPageContent(pageInfo.id);
+  const post_contents = await getPageContent(post_data.id);
+  post_data["contents"] = post_contents;
 
-  return page_data;
+  return post_data;
 }
+
+/*
+
+interface NotionPostData {
+  id: string;
+  title: string;
+  date: string;
+  tags: string[];
+  image?: string[];
+  rank?: number;
+  excerpt?: string;
+  slug: string;
+  contents?: MdBlock[];
+}
+  */
