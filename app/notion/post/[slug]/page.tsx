@@ -5,10 +5,10 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from "remark-gfm";
 
 // 引数の型定義
-type Props = {
-  params: { code: string }
-  searchParams: { [key: string]: string | string[] | undefined }
-}
+// type Props = {
+//   params: { code: string }
+//   searchParams: { [key: string]: string | string[] | undefined }
+// }
 
 
 export async function generateStaticParams() {
