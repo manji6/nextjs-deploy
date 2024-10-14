@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Header from "@components/header";
 import "./globals.css";
 
 
@@ -27,10 +26,7 @@ export default function RootLayout({
         <meta charSet="UTF-8"></meta>
       </head>
       <body className={notoSansJP.className}>
-        <div className="p-5 bg-gradient-to-r from-lime-500 to-green-200">
-          <Header />
-          {children}
-        </div>
+        {children}
       </body>
     </html>
   );
